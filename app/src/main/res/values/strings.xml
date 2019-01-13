@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">UdacityMovieList</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_movie_details">MovieDetailsActivity</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="movie_length">Movie Length</string>
+    <string name="movie_rating">Rating</string>
+    <string name="movie_description">Movie Description</string>
 </resources>

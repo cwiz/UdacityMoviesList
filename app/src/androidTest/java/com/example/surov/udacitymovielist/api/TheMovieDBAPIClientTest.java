@@ -3,6 +3,7 @@ package com.example.surov.udacitymovielist.api;
 import org.junit.Test;
 
 import com.example.surov.udacitymovielist.models.Movie;
+import com.example.surov.udacitymovielist.models.MovieVideo;
 import com.example.surov.udacitymovielist.settings.Settings;
 
 import static org.junit.Assert.*;
@@ -23,5 +24,18 @@ public class TheMovieDBAPIClientTest {
         assertNotEquals(movieList, null);
         assertNotEquals(movieList.size(), 0);
 
+    }
+
+    @Test
+    public void getVideos() {
+        List<MovieVideo> movieList = api.getVideos(400650);
+        assertNotEquals(movieList, null);
+        assertNotEquals(movieList.size(), 0);
+    }
+
+    @Test
+    public void getDetails() {
+        Movie movie = api.getDetails(400650);
+        assertNotEquals(movie, null);
     }
 }
