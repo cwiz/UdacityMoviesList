@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ public class MovieListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     // Code
+    private String movieSortOrder = "popular";
     private TheMovieDBAPIClient apiClient;
 
     @Override
@@ -37,6 +39,9 @@ public class MovieListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
         setTitle("Popular movies");
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         // setup API client
         apiClient = new TheMovieDBAPIClient(Settings.THE_MOVIE_DB_API_KEY);
@@ -68,22 +73,37 @@ public class MovieListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            String currentTitle = (String) item.getTitle();
+
+            if (currentTitle.equals("popular")) {
+                item.setTitle("highest rated");
+            } else {
+                item.setTitle("popular");
+            }
+
+            setMovieSortOrder((String) item.getTitle());
         }
 
-        return super.onOptionsItemSelected(item);
+        // request data
+        requestMovies();
+
+        return false;
     }
 
     // Custom view methods
     private void requestMovies(){
         new RequestMoviesAsyncTask().execute();
+    }
+
+    private String getMovieSortOrder(){
+        return movieSortOrder;
+    }
+
+    private void setMovieSortOrder(String order){
+        movieSortOrder = order;
     }
 
     private void setResults(List<Movie> movies) {
@@ -97,12 +117,19 @@ public class MovieListActivity extends AppCompatActivity {
     class RequestMoviesAsyncTask extends AsyncTask<Void, Void, List<Movie>>{
         @Override
         protected List<Movie> doInBackground(Void... voids) {
-            return apiClient.listMovies("");
+            return apiClient.listMovies(getMovieSortOrder());
         }
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
             setResults(movies);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            super.onPreExecute();
         }
     }
 

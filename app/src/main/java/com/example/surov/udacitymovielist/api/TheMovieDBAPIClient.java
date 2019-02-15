@@ -33,6 +33,13 @@ public class TheMovieDBAPIClient {
     }
 
     public List<Movie> listMovies(String sortBy) {
+
+        if (sortBy == "popular") {
+            sortBy = "popularity.desc";
+        } else {
+            sortBy = "vote_average.desc";
+        }
+
         String url = Uri.parse(API_URL).buildUpon()
                 .appendPath("discover").appendPath("movie")
                 .appendQueryParameter("api_key", Settings.THE_MOVIE_DB_API_KEY)
